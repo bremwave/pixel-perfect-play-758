@@ -3,12 +3,11 @@ import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import {
-  GraduationCap, VideoCamera, Briefcase, Globe, Target, Buildings, ArrowsClockwise,
-  ChalkboardTeacher, ArrowUpRight, Star, MapPin, EnvelopeSimple, Phone, List, X, Check,
+  ArrowUpRight, ArrowRight, ArrowLeft, Asterisk, List, X, MapPin, EnvelopeSimple, Phone,
+  InstagramLogo, LinkedinLogo, XLogo, YoutubeLogo, Target, Buildings, ArrowsClockwise, ChalkboardTeacher,
 } from "@phosphor-icons/react";
-import hero from "@/assets/hero.jpg";
-import studio from "@/assets/studio.jpg";
-import workspace from "@/assets/workspace.jpg";
+
+const IMG = "https://placehold.net/default.png";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -25,254 +24,305 @@ export const Route = createFileRoute("/")({
 });
 
 const pillars = [
-  { icon: GraduationCap, tag: "Academy", title: "Tech Academy", text: "Hands-on training in skills people actually pay for.", items: ["Web dev, UI/UX, cybersecurity, data analysis", "AI for business and automation", "Photography and cinematography"] },
-  { icon: VideoCamera, tag: "Media", title: "Creative & Media Production", text: "Photos, videos and branding that make people stop scrolling.", items: ["Studio for portraits and products", "Content room for YouTubers and podcasters", "Live streaming for virtual events"] },
-  { icon: Briefcase, tag: "Workspace", title: "Workspace & Business", text: "A professional base that helps you get serious work done.", items: ["Co-working with fast internet and backup power", "Boardrooms for 50+ people", "Startup incubation, pitch decks, mentorship"] },
-  { icon: Globe, tag: "Digital", title: "Digital Integration", text: "Modern tools that help your business run smarter.", items: ["E-commerce and websites that convert", "AI chatbots and workflow automation", "SEO and online reputation"] },
+  { title: "Tech Academy", tags: ["Web dev", "UI/UX", "AI"], text: "Practical classes in web development, UI/UX, cybersecurity, data analysis and AI for business." },
+  { title: "Media Studio", tags: ["Photo", "Video"], text: "Portrait and product shoots, a content room for creators and live streaming for events." },
+  { title: "Workspace", tags: ["Co-working", "Boardroom"], text: "Fast internet, steady power and boardrooms that seat more than fifty people." },
+  { title: "Digital Solutions", tags: ["Web", "SEO", "Automation"], text: "Websites, online stores, chatbots and SEO that help your business get found." },
+];
+
+const programs = [
+  { t: "Web Development", tag: "Academy", d: "12 weeks" },
+  { t: "UI/UX Design", tag: "Academy", d: "8 weeks" },
+  { t: "Photography & Film", tag: "Creative", d: "6 weeks" },
+  { t: "Startup Incubation", tag: "Business", d: "Ongoing" },
 ];
 
 const why = [
-  { icon: Target, title: "100% practical", text: "Real tools and real projects, so you leave ready to work." },
-  { icon: Buildings, title: "A proper hub", text: "Everything you need under one roof in Onitsha." },
-  { icon: ArrowsClockwise, title: "Full ecosystem", text: "Learn, create, work and launch, all in one place." },
-  { icon: ChalkboardTeacher, title: "Working experts", text: "Your instructors do this for a living every day." },
+  { icon: Target, t: "Fully practical", d: "Real tools, real projects. You leave ready to work." },
+  { icon: Buildings, t: "One proper hub", d: "Learn, shoot, meet and work under one roof." },
+  { icon: ArrowsClockwise, t: "Full ecosystem", d: "From your first class to your first client." },
+  { icon: ChalkboardTeacher, t: "Working experts", d: "Taught by people who do this every day." },
 ];
 
 const reviews = [
-  { q: "The web development course changed things for me. We built real projects and I got my first developer job three months after finishing.", n: "Chinedu Okonkwo", r: "Web Developer" },
-  { q: "My startup grew out of the co-working space. Internet that never drops, steady power and people who genuinely want you to win.", n: "Ada Nwosu", r: "Startup Founder" },
-  { q: "The studio team gave us photos and videos that look world class. Our brand has been getting noticed ever since.", n: "Emeka Okafor", r: "Business Owner" },
+  { q: "We built real projects from week one. Three months after finishing, I landed my first developer job.", n: "Chinedu Okonkwo", r: "Web Developer" },
+  { q: "My startup grew in that co-working space. The internet never drops and the people genuinely want you to win.", n: "Ada Nwosu", r: "Startup Founder" },
+  { q: "The studio team gave us photos and videos that look world class. People finally notice our brand.", n: "Emeka Okafor", r: "Business Owner" },
 ];
 
-const tools = ["figma.com", "github.com", "google.com", "openai.com", "adobe.com", "canva.com", "wordpress.com", "shopify.com"];
-
-const faqs = [
-  { q: "Do I need any experience before joining a course?", a: "Not at all. Most of our classes start from the basics and move at a pace that works for beginners." },
-  { q: "Can I book the studio or boardroom by the hour?", a: "Yes. Call or email us with your date and we will sort out a slot that suits you." },
-  { q: "Do you offer daily co-working passes?", a: "We have daily, weekly and monthly plans. Drop by for a tour first if you like." },
-  { q: "Can you build a website for my business?", a: "Definitely. We design and build sites, online stores and automations for businesses of every size." },
-];
+const tools = ["figma.com", "github.com", "google.com", "openai.com", "adobe.com", "canva.com", "notion.so", "shopify.com"];
 
 function Index() {
   const root = useRef<HTMLDivElement>(null);
   const [menu, setMenu] = useState(false);
-  const [open, setOpen] = useState<number | null>(0);
+  const [rev, setRev] = useState(0);
+  const [hover, setHover] = useState<number | null>(null);
 
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
     const ctx = gsap.context(() => {
-      gsap.from(".hero-in", { y: 30, opacity: 0, duration: 0.9, stagger: 0.1, ease: "power3.out" });
-      gsap.from(".hero-img", { scale: 1.08, opacity: 0, duration: 1.4, ease: "power3.out" });
-      gsap.utils.toArray<HTMLElement>(".reveal").forEach((el) => {
-        gsap.from(el, { y: 40, opacity: 0, duration: 0.8, ease: "power3.out", scrollTrigger: { trigger: el, start: "top 88%" } });
-      });
-      gsap.to(".marquee", { xPercent: -50, repeat: -1, duration: 25, ease: "none" });
-      gsap.to(".float-a", { y: -12, rotate: -8, yoyo: true, repeat: -1, duration: 2.6, ease: "sine.inOut" });
-      gsap.to(".float-b", { y: 12, rotate: 8, yoyo: true, repeat: -1, duration: 3, ease: "sine.inOut" });
+      gsap.from(".h-in", { y: 24, opacity: 0, duration: 0.9, stagger: 0.08, ease: "power3.out", delay: 0.1 });
+      gsap.from(".h-card", { y: 40, opacity: 0, duration: 1.1, stagger: 0.12, ease: "power3.out" });
+      gsap.utils.toArray<HTMLElement>(".rv").forEach((el) =>
+        gsap.from(el, { y: 32, opacity: 0, duration: 0.8, ease: "power3.out", scrollTrigger: { trigger: el, start: "top 90%" } }),
+      );
+      gsap.from(".pill", { scale: 0.85, opacity: 0, stagger: 0.1, duration: 0.7, ease: "back.out(1.6)", scrollTrigger: { trigger: ".pills", start: "top 85%" } });
+      gsap.to(".orb", { y: -10, yoyo: true, repeat: -1, duration: 2.4, stagger: 0.4, ease: "sine.inOut" });
+      gsap.to(".marquee", { xPercent: -50, repeat: -1, duration: 30, ease: "none" });
+      gsap.to(".spin", { rotate: 360, repeat: -1, duration: 12, ease: "none" });
     }, root);
     return () => ctx.revert();
   }, []);
 
-  const nav = [["Services", "#services"], ["Why us", "#why"], ["Stories", "#stories"], ["FAQ", "#faq"]];
+  const nav = [["About", "#about"], ["Services", "#services"], ["Programs", "#programs"], ["Stories", "#stories"]];
+  const r = reviews[rev];
 
   return (
-    <div ref={root} className="overflow-x-hidden text-sm">
-      <header className="fixed inset-x-0 top-0 z-50 border-b border-border/60 bg-background/80 backdrop-blur">
-        <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-5">
-          <a href="#" className="font-display text-base font-semibold">Entech<span className="text-muted-foreground">Innovations</span></a>
-          <nav className="hidden gap-7 text-xs font-medium text-muted-foreground md:flex">
-            {nav.map(([l, h]) => <a key={h} href={h} className="transition-colors hover:text-foreground">{l}</a>)}
+    <div ref={root} className="overflow-x-hidden text-[13px] sm:text-sm">
+      <div className="mx-auto max-w-[1240px] px-3 sm:px-5">
+        {/* NAV */}
+        <header className="sticky top-3 z-50 mt-3 flex items-center justify-between rounded-full border border-border bg-background/85 p-1.5 backdrop-blur-md">
+          <nav className="hidden gap-1 md:flex">
+            {nav.map(([l, h]) => (
+              <a key={h} href={h} className="rounded-full px-3.5 py-2 text-xs text-muted-foreground transition-colors hover:bg-muted hover:text-foreground">{l}</a>
+            ))}
           </nav>
-          <a href="#contact" className="hidden rounded-full bg-primary px-4 py-2 text-xs font-semibold text-primary-foreground md:inline-flex">Get in touch</a>
-          <button aria-label="Menu" className="md:hidden" onClick={() => setMenu(!menu)}>{menu ? <X size={22} /> : <List size={22} />}</button>
-        </div>
-        {menu && (
-          <div className="flex flex-col gap-4 border-t border-border bg-background px-5 py-5 md:hidden">
-            {[...nav, ["Contact", "#contact"]].map(([l, h]) => <a key={h} href={h} onClick={() => setMenu(false)} className="font-medium">{l}</a>)}
-          </div>
-        )}
-      </header>
+          <a href="#" className="flex items-center gap-1.5 pl-3 font-display text-[15px] font-semibold md:absolute md:left-1/2 md:-translate-x-1/2 md:pl-0">
+            <span className="grid h-6 w-6 place-items-center rounded-md bg-primary text-primary-foreground"><Asterisk size={14} weight="bold" /></span>
+            Entech
+          </a>
+          <a href="#contact" className="hidden rounded-full bg-ink px-4 py-2 text-xs font-medium text-primary-foreground md:inline-flex">Contact us</a>
+          <button aria-label="Menu" onClick={() => setMenu(!menu)} className="grid h-9 w-9 place-items-center rounded-full bg-muted md:hidden">
+            {menu ? <X size={18} /> : <List size={18} />}
+          </button>
+          {menu && (
+            <div className="absolute inset-x-0 top-14 flex flex-col rounded-3xl border border-border bg-background p-3 shadow-xl md:hidden">
+              {[...nav, ["Contact", "#contact"]].map(([l, h]) => (
+                <a key={h} href={h} onClick={() => setMenu(false)} className="rounded-2xl px-4 py-3 font-medium hover:bg-muted">{l}</a>
+              ))}
+            </div>
+          )}
+        </header>
 
-      {/* Hero */}
-      <section className="mx-auto max-w-6xl px-5 pt-24 md:pt-28">
-        <div className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground hero-in">
-          <span className="h-1.5 w-1.5 rounded-full bg-accent" /> Onitsha, Anambra State
-        </div>
-        <div className="mt-4 grid gap-6 md:grid-cols-[1.4fr_1fr] md:items-end">
-          <h1 className="hero-in text-4xl font-medium leading-[1.05] sm:text-5xl md:text-6xl">Building West Africa's digital future, one skill at a time.</h1>
-          <div className="hero-in space-y-5">
-            <p className="text-muted-foreground leading-relaxed">ENTECH Innovations is a tech, media and business hub where people learn real skills, create great work and grow serious businesses. We don't just teach. We build alongside you.</p>
-            <div className="flex flex-wrap gap-3">
-              <a href="#services" className="inline-flex items-center gap-2 rounded-full bg-accent px-5 py-2.5 text-xs font-semibold text-accent-foreground">Explore services <ArrowUpRight size={14} weight="bold" /></a>
-              <a href="#contact" className="inline-flex items-center rounded-full border border-border px-5 py-2.5 text-xs font-semibold">Visit the hub</a>
+        {/* HERO */}
+        <section className="mt-3 grid gap-3 lg:grid-cols-2">
+          <div className="h-card relative flex min-h-[420px] flex-col items-center justify-center rounded-[2rem] bg-primary px-6 py-14 text-center text-primary-foreground sm:min-h-[520px]">
+            <span className="h-in flex items-center gap-1.5 text-[11px] font-medium opacity-80"><Asterisk size={12} weight="bold" /> Entech Innovations Limited</span>
+            <h1 className="h-in mt-5 font-display text-[2.4rem] font-medium leading-[1.02] sm:text-6xl">
+              Empowering West Africa's <span className="underline decoration-accent decoration-2 underline-offset-[6px]">digital</span> future.
+            </h1>
+            <p className="h-in mt-5 max-w-sm opacity-80">A tech, media and business hub in Onitsha where people learn real skills and build real things.</p>
+            <div className="h-in mt-7 flex flex-wrap justify-center gap-2">
+              <a href="#programs" className="inline-flex items-center gap-2 rounded-full bg-background px-5 py-2.5 text-xs font-medium text-foreground">Start learning <ArrowRight size={14} /></a>
+              <a href="#services" className="rounded-full border border-primary-foreground/30 px-5 py-2.5 text-xs font-medium">Our services</a>
+            </div>
+            <div className="h-in mt-8 flex items-center gap-3 text-[11px] opacity-90">
+              <div className="flex -space-x-2">
+                {[0, 1, 2].map((i) => <img key={i} src={IMG} alt="" className="h-7 w-7 rounded-full border-2 border-primary object-cover" />)}
+              </div>
+              <span className="text-left leading-tight">Trusted by students,<br />startups and SMEs</span>
             </div>
           </div>
-        </div>
-        <div className="relative mt-10 overflow-hidden rounded-3xl">
-          <img src={hero} alt="Students learning together at ENTECH" width={1600} height={1008} className="hero-img h-[320px] w-full object-cover sm:h-[460px]" />
-          <div className="absolute bottom-4 left-4 right-4 flex flex-wrap gap-2">
-            {["Individuals", "Startups", "SMEs", "Corporates", "Government"].map((t) => (
-              <span key={t} className="rounded-full bg-background/85 px-3 py-1 text-[11px] font-medium backdrop-blur">{t}</span>
+
+          <div className="h-card relative min-h-[420px] overflow-hidden rounded-[2rem] bg-muted sm:min-h-[520px]">
+            <img src={IMG} alt="ENTECH hub" className="absolute inset-0 h-full w-full object-cover" />
+            <div className="absolute left-4 top-4 flex items-center gap-3 rounded-2xl bg-background p-2 pr-4 shadow-sm">
+              <img src={IMG} alt="" className="h-12 w-12 rounded-xl object-cover" />
+              <span className="text-xs font-medium leading-tight">Onitsha's<br />tech hub</span>
+            </div>
+            <span className="absolute right-4 top-4 grid h-9 w-9 place-items-center rounded-full bg-accent text-accent-foreground"><ArrowUpRight size={16} /></span>
+            <div className="absolute left-1/2 top-[38%] hidden -translate-x-1/2 flex-col gap-2 sm:flex">
+              {["Tech Academy", "Media Studio", "Co-working"].map((t, i) => (
+                <span key={t} style={{ marginLeft: i * 40 }} className="flex w-max items-center gap-1.5 rounded-full border border-background/60 bg-ink/30 px-3 py-1 text-[11px] text-primary-foreground backdrop-blur">
+                  <span className="h-1.5 w-1.5 rounded-full bg-accent" />{t}
+                </span>
+              ))}
+            </div>
+            <p className="absolute bottom-4 right-4 max-w-[200px] rounded-2xl bg-background p-3 text-[11px] leading-snug">Practical skills, workspace and strategy for a fast moving economy.</p>
+          </div>
+        </section>
+
+        {/* STATEMENT */}
+        <section id="about" className="relative py-24 text-center sm:py-32">
+          <img src={IMG} alt="" className="orb absolute left-[6%] top-16 hidden h-12 w-12 rounded-full object-cover sm:block" />
+          <img src={IMG} alt="" className="orb absolute left-[14%] top-36 hidden h-14 w-14 rounded-full object-cover sm:block" />
+          <img src={IMG} alt="" className="orb absolute right-[8%] top-14 hidden h-14 w-14 rounded-full object-cover sm:block" />
+          <img src={IMG} alt="" className="orb absolute right-[16%] top-40 hidden h-11 w-11 rounded-full object-cover sm:block" />
+          <h2 className="rv mx-auto max-w-xl font-display text-3xl font-medium leading-tight sm:text-5xl">We don't just teach and serve. We build.</h2>
+          <p className="rv mx-auto mt-5 max-w-md text-muted-foreground">From the commercial heart of Onitsha, we help individuals, startups, SMEs, corporates and government agencies grow with the right skills and tools.</p>
+          <div className="rv mt-7 flex justify-center gap-3">
+            <a href="#services" className="inline-flex items-center gap-2 rounded-full border border-border px-5 py-2.5 text-xs font-medium">Explore services <ArrowRight size={14} /></a>
+          </div>
+        </section>
+
+        {/* PILLS */}
+        <section className="pills grid grid-cols-2 gap-3 md:grid-cols-4">
+          <div className="pill grid h-28 place-items-center rounded-full bg-muted font-display text-2xl font-medium sm:h-36 sm:text-4xl">Learn</div>
+          <div className="pill relative grid h-28 place-items-center overflow-hidden rounded-full sm:h-36">
+            <img src={IMG} alt="" className="absolute inset-0 h-full w-full object-cover" />
+            <span className="relative font-display text-2xl font-medium text-primary-foreground sm:text-4xl">Create</span>
+          </div>
+          <div className="pill grid h-28 place-items-center rounded-full bg-primary text-primary-foreground sm:h-36"><ArrowRight size={44} weight="light" /></div>
+          <div className="pill relative grid h-28 place-items-center overflow-hidden rounded-full sm:h-36">
+            <img src={IMG} alt="" className="absolute inset-0 h-full w-full object-cover" />
+            <span className="relative font-display text-2xl font-medium text-primary-foreground sm:text-4xl">Elevate</span>
+          </div>
+        </section>
+
+        {/* PROGRAMS TABLE */}
+        <section id="programs" className="py-24">
+          <div className="rv flex flex-col justify-between gap-3 sm:flex-row sm:items-end">
+            <h2 className="font-display text-3xl font-medium sm:text-4xl">Popular programs</h2>
+            <p className="max-w-[220px] text-xs text-muted-foreground">Short, focused and hands-on. Pick a track and start this month.</p>
+          </div>
+          <div className="mt-8 hidden grid-cols-[2fr_1fr_1fr_40px] pb-3 text-[11px] text-muted-foreground sm:grid">
+            <span>Program</span><span>Track</span><span>Duration</span><span />
+          </div>
+          <div className="relative border-t border-border" onMouseLeave={() => setHover(null)}>
+            {programs.map((p, i) => (
+              <a key={p.t} href="#contact" onMouseEnter={() => setHover(i)}
+                className="rv relative grid grid-cols-[1fr_auto] items-center gap-2 border-b border-border py-5 sm:grid-cols-[2fr_1fr_1fr_40px]">
+                <span className="font-display text-lg font-medium sm:text-xl">{p.t}</span>
+                <span className="hidden sm:block"><span className={`rounded-full border px-2.5 py-0.5 text-[11px] ${hover === i ? "border-primary bg-primary text-primary-foreground" : "border-border"}`}>{p.tag}</span></span>
+                <span className="hidden text-muted-foreground sm:block">{p.d}</span>
+                <span className={`grid h-9 w-9 place-items-center rounded-full border transition-colors ${hover === i ? "border-primary bg-primary text-primary-foreground" : "border-border"}`}><ArrowRight size={14} /></span>
+              </a>
+            ))}
+            {hover !== null && (
+              <img src={IMG} alt="" style={{ top: hover * 72 - 20 }} className="pointer-events-none absolute right-24 hidden h-32 w-48 -rotate-6 rounded-2xl object-cover shadow-2xl transition-all duration-300 lg:block" />
+            )}
+          </div>
+        </section>
+
+        {/* SERVICES CARDS */}
+        <section id="services">
+          <div className="rv mb-8 flex flex-col justify-between gap-3 sm:flex-row sm:items-end">
+            <h2 className="font-display text-3xl font-medium sm:text-4xl">Our pillars</h2>
+            <p className="max-w-[220px] text-xs text-muted-foreground">Four connected services that help you grow faster.</p>
+          </div>
+          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-[1.5fr_1fr_1fr_1fr]">
+            {pillars.map((p, i) => (
+              <div key={p.title} className="rv group relative h-[380px] overflow-hidden rounded-[1.75rem] bg-muted sm:h-[440px]">
+                <img src={IMG} alt={p.title} loading="lazy" className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" />
+                <div className="absolute inset-0 bg-gradient-to-t from-ink/90 via-ink/20 to-transparent" />
+                <div className="absolute left-4 top-4 flex flex-wrap gap-1">
+                  {p.tags.map((t) => <span key={t} className="rounded-full border border-primary-foreground/40 px-2.5 py-0.5 text-[10px] text-primary-foreground">{t}</span>)}
+                </div>
+                <span className={`absolute right-4 top-4 grid h-9 w-9 place-items-center rounded-full ${i === 0 ? "bg-accent text-accent-foreground" : "bg-background text-foreground"}`}><ArrowUpRight size={14} /></span>
+                <div className="absolute inset-x-4 bottom-4 text-primary-foreground">
+                  <h3 className="font-display text-2xl font-medium leading-none">{p.title}</h3>
+                  <p className="mt-2 text-[11px] leading-snug opacity-75">{p.text}</p>
+                  <a href="#contact" className="mt-4 flex items-center justify-between rounded-full bg-background px-4 py-2.5 text-[11px] font-semibold uppercase tracking-wide text-foreground">Explore <ArrowRight size={12} /></a>
+                </div>
+              </div>
             ))}
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* Tools */}
-      <section className="mt-14 overflow-hidden border-y border-border py-6">
-        <p className="mb-5 text-center text-[11px] uppercase tracking-wider text-muted-foreground">Tools you'll work with</p>
-        <div className="marquee flex w-max gap-14">
-          {[...tools, ...tools].map((d, i) => (
-            <img key={i} src={`https://cdn.brandfetch.io/${d}/w/200/h/60`} alt={d} loading="lazy" className="h-6 w-auto opacity-60 grayscale" onError={(e) => (e.currentTarget.style.display = "none")} />
-          ))}
-        </div>
-      </section>
-
-      {/* Services */}
-      <section id="services" className="mx-auto max-w-6xl px-5 py-20">
-        <div className="reveal flex flex-col justify-between gap-3 md:flex-row md:items-end">
-          <div>
-            <Label>Services</Label>
-            <h2 className="mt-3 text-3xl font-medium sm:text-4xl">Four ways we help you grow</h2>
-          </div>
-          <p className="max-w-xs text-muted-foreground">Pick one or use them all. Everything connects.</p>
-        </div>
-        <div className="mt-10 grid gap-4 sm:grid-cols-2">
-          {pillars.map(({ icon: Icon, tag, title, text, items }) => (
-            <div key={title} className="reveal group rounded-3xl border border-border bg-card p-6 transition-shadow hover:shadow-xl">
-              <div className="flex items-center justify-between">
-                <div className="grid h-10 w-10 place-items-center rounded-full bg-secondary"><Icon size={20} /></div>
-                <span className="rounded-full bg-secondary px-3 py-1 text-[11px] text-muted-foreground">{tag}</span>
-              </div>
-              <h3 className="mt-6 text-lg font-medium">{title}</h3>
-              <p className="mt-1 text-muted-foreground">{text}</p>
-              <ul className="mt-5 space-y-2 border-t border-border pt-5">
-                {items.map((i) => <li key={i} className="flex gap-2"><Check size={16} className="mt-0.5 shrink-0" weight="bold" />{i}</li>)}
-              </ul>
+        {/* LOGOS */}
+        <section className="mt-24 overflow-hidden">
+          <p className="rv mb-6 text-center text-[11px] text-muted-foreground">Industry tools you'll learn and work with</p>
+          <div className="relative [mask-image:linear-gradient(90deg,transparent,black_15%,black_85%,transparent)]">
+            <div className="marquee flex w-max items-center gap-16">
+              {[...tools, ...tools].map((d, i) => (
+                <img key={i} src={`https://cdn.brandfetch.io/${d}/w/240/h/80/logo`} alt={d} loading="lazy" className="h-6 w-auto opacity-50 grayscale"
+                  onError={(e) => { e.currentTarget.style.display = "none"; }} />
+              ))}
             </div>
-          ))}
-        </div>
-        <div className="mt-4 grid gap-4 sm:grid-cols-2">
-          {[[studio, "Studio & media"], [workspace, "Boardrooms & workspace"]].map(([src, l]) => (
-            <div key={l} className="reveal relative overflow-hidden rounded-3xl">
-              <img src={src} alt={l} loading="lazy" width={800} height={1008} className="h-72 w-full object-cover transition-transform duration-700 hover:scale-105 sm:h-96" />
-              <span className="absolute left-4 top-4 rounded-full bg-background/85 px-3 py-1 text-[11px] font-medium backdrop-blur">{l}</span>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* Why */}
-      <section id="why" className="bg-deep text-primary-foreground">
-        <div className="mx-auto max-w-6xl px-5 py-20">
-          <div className="reveal">
-            <Label light>Why ENTECH</Label>
-            <h2 className="mt-3 max-w-lg text-3xl font-medium sm:text-4xl">The place to level up in tech</h2>
           </div>
-          <div className="mt-10 grid gap-px overflow-hidden rounded-3xl bg-primary-foreground/10 sm:grid-cols-2 lg:grid-cols-4">
-            {why.map(({ icon: Icon, title, text }, i) => (
-              <div key={title} className="reveal bg-primary p-6">
-                <span className="text-[11px] text-primary-foreground/50">0{i + 1}</span>
-                <Icon size={26} className="mt-6 text-accent" />
-                <h3 className="mt-4 text-base font-medium">{title}</h3>
-                <p className="mt-1 text-primary-foreground/70">{text}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+        </section>
 
-      {/* Reviews */}
-      <section id="stories" className="mx-auto max-w-6xl px-5 py-20">
-        <div className="reveal"><Label>Stories</Label><h2 className="mt-3 text-3xl font-medium sm:text-4xl">What our people say</h2></div>
-        <div className="mt-10 grid gap-4 md:grid-cols-3">
-          {reviews.map((r) => (
-            <figure key={r.n} className="reveal flex flex-col justify-between rounded-3xl bg-card p-6 shadow-sm">
+        {/* WHY */}
+        <section className="py-24">
+          <div className="grid gap-3 lg:grid-cols-[1fr_2fr]">
+            <div className="rv flex flex-col justify-between rounded-[1.75rem] bg-ink p-7 text-primary-foreground">
               <div>
-                <div className="flex gap-0.5">{Array.from({ length: 5 }).map((_, i) => <Star key={i} size={14} weight="fill" />)}</div>
-                <blockquote className="mt-4 leading-relaxed">"{r.q}"</blockquote>
+                <span className="text-[11px] opacity-60">Why Entech</span>
+                <h2 className="mt-3 font-display text-3xl font-medium leading-tight sm:text-4xl">Where serious growth happens.</h2>
               </div>
-              <figcaption className="mt-6 flex items-center gap-3">
-                <span className="grid h-9 w-9 place-items-center rounded-full bg-accent text-xs font-semibold text-accent-foreground">{r.n.split(" ").map((x) => x[0]).join("")}</span>
-                <span><span className="block font-semibold">{r.n}</span><span className="text-xs text-muted-foreground">{r.r}</span></span>
-              </figcaption>
-            </figure>
-          ))}
-        </div>
-      </section>
-
-      {/* FAQ */}
-      <section id="faq" className="mx-auto grid max-w-6xl gap-10 px-5 pb-20 md:grid-cols-2">
-        <div className="reveal flex flex-col justify-between gap-8">
-          <div><Label>FAQ</Label><h2 className="mt-3 text-3xl font-medium sm:text-4xl">Questions people ask</h2></div>
-          <div className="max-w-xs rounded-3xl bg-card p-6 shadow-sm">
-            <p className="font-semibold">Still curious?</p>
-            <p className="mt-2 text-muted-foreground">Courses, studio bookings, desk space or anything else. We're happy to talk.</p>
-            <a href="#contact" className="mt-5 flex items-center justify-between font-semibold">Contact us <span className="grid h-8 w-8 place-items-center rounded-full bg-secondary"><ArrowUpRight size={14} /></span></a>
-          </div>
-        </div>
-        <div className="reveal">
-          {faqs.map((f, i) => (
-            <div key={f.q} className="border-b border-border py-4">
-              <button onClick={() => setOpen(open === i ? null : i)} className="flex w-full items-start justify-between gap-4 text-left">
-                <span><span className="block text-[11px] text-muted-foreground">0{i + 1}</span><span className="font-medium">{f.q}</span></span>
-                <span className={`grid h-7 w-7 shrink-0 place-items-center rounded-full bg-secondary transition-transform ${open === i ? "rotate-45" : ""}`}>+</span>
-              </button>
-              {open === i && <p className="mt-3 pr-10 text-muted-foreground">{f.a}</p>}
+              <div className="mt-10 flex items-end justify-between">
+                <div><p className="font-display text-5xl font-medium">50+</p><p className="text-[11px] opacity-60">seat conference hall</p></div>
+                <Asterisk size={56} className="spin text-accent" />
+              </div>
             </div>
-          ))}
-        </div>
-      </section>
-
-      {/* CTA */}
-      <section id="contact" className="relative mx-auto max-w-6xl px-5 py-16 text-center">
-        <img src={studio} alt="" className="float-a absolute left-2 top-6 hidden h-40 w-32 rounded-2xl object-cover shadow-xl sm:block md:left-16" />
-        <img src={hero} alt="" className="float-b absolute bottom-6 right-2 hidden h-32 w-40 rounded-2xl object-cover shadow-xl sm:block md:right-16" />
-        <div className="reveal mx-auto max-w-md">
-          <h2 className="text-3xl font-medium sm:text-4xl"><span className="text-muted-foreground">Ready to</span><br />build something great?</h2>
-          <p className="mt-4 text-muted-foreground">Got a project, want to join a class or need a desk? Come say hello.</p>
-          <div className="mt-6 flex flex-wrap justify-center gap-3">
-            <a href="mailto:info@entechinnovations.com" className="rounded-full bg-accent px-5 py-2.5 text-xs font-semibold text-accent-foreground">Contact us today</a>
-            <a href="https://maps.google.com/?q=207+Ugwunobamkpa+Road+Onitsha" target="_blank" rel="noreferrer" className="rounded-full border border-border px-5 py-2.5 text-xs font-semibold">Get directions</a>
+            <div className="grid gap-3 sm:grid-cols-2">
+              {why.map(({ icon: Icon, t, d }) => (
+                <div key={t} className="rv rounded-[1.75rem] border border-border bg-card p-6 transition-colors hover:border-primary">
+                  <span className="grid h-10 w-10 place-items-center rounded-full bg-secondary text-primary"><Icon size={18} /></span>
+                  <h3 className="mt-8 font-display text-lg font-medium">{t}</h3>
+                  <p className="mt-1 text-muted-foreground">{d}</p>
+                </div>
+              ))}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      <footer className="bg-deep text-primary-foreground">
-        <div className="mx-auto max-w-6xl px-5 pt-14">
-          <div className="grid gap-10 md:grid-cols-[1.4fr_1fr_1fr]">
+        {/* TESTIMONIAL */}
+        <section id="stories" className="rv rounded-[2rem] bg-secondary px-6 py-14 sm:px-14 sm:py-20">
+          <div className="flex items-center justify-between">
+            <span className="text-[11px] text-secondary-foreground/70">Stories · {String(rev + 1).padStart(2, "0")}/03</span>
+            <div className="flex gap-2">
+              <button aria-label="Previous" onClick={() => setRev((rev + 2) % 3)} className="grid h-9 w-9 place-items-center rounded-full bg-background"><ArrowLeft size={14} /></button>
+              <button aria-label="Next" onClick={() => setRev((rev + 1) % 3)} className="grid h-9 w-9 place-items-center rounded-full bg-primary text-primary-foreground"><ArrowRight size={14} /></button>
+            </div>
+          </div>
+          <blockquote key={rev} className="mt-10 max-w-3xl font-display text-2xl font-medium leading-snug text-secondary-foreground sm:text-4xl">"{r.q}"</blockquote>
+          <div className="mt-10 flex items-center gap-3">
+            <img src={IMG} alt="" className="h-11 w-11 rounded-full object-cover" />
+            <div><p className="font-semibold">{r.n}</p><p className="text-xs text-secondary-foreground/70">{r.r}</p></div>
+          </div>
+        </section>
+
+        {/* CTA */}
+        <section id="contact" className="py-24">
+          <div className="rv grid gap-8 border-b border-border pb-16 md:grid-cols-2 md:items-end">
+            <span className="w-max rounded-full border border-border px-3 py-1 text-[11px]">Let's talk</span>
             <div>
-              <p className="font-display text-lg font-semibold">EntechInnovations</p>
-              <p className="mt-1 text-primary-foreground/60">Innovate. Create. Elevate.</p>
-              <ul className="mt-6 space-y-3 text-primary-foreground/80">
-                <li className="flex gap-3"><MapPin size={18} className="shrink-0" />207 Ugwunobamkpa Road, by Savoir Junction, off Awka Road, Onitsha, Anambra State</li>
-                <li className="flex gap-3"><EnvelopeSimple size={18} />info@entechinnovations.com</li>
-                <li className="flex gap-3"><Phone size={18} />+234 806 983 1304</li>
+              <h2 className="font-display text-2xl font-medium leading-snug sm:text-3xl">Have a project, want to join a class or need a desk? Let's build something great together.</h2>
+              <div className="mt-6 flex flex-wrap gap-2">
+                <a href="mailto:info@entechinnovations.com" className="inline-flex items-center gap-2 rounded-full bg-primary px-5 py-2.5 text-xs font-medium text-primary-foreground">Contact us today <ArrowRight size={14} /></a>
+                <a href="https://maps.google.com/?q=207+Ugwunobamkpa+Road+Onitsha" target="_blank" rel="noreferrer" className="rounded-full border border-border bg-background px-5 py-2.5 text-xs font-medium">Get directions</a>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      {/* FOOTER */}
+      <footer className="bg-deep text-primary-foreground">
+        <div className="mx-auto max-w-[1240px] px-5 pt-16">
+          <div className="grid gap-12 md:grid-cols-[1.3fr_1fr_1fr]">
+            <div>
+              <p className="font-display text-xl font-semibold">Entech Innovations</p>
+              <p className="mt-1 text-xs opacity-60">Innovate. Create. Elevate.</p>
+              <ul className="mt-8 space-y-3 text-xs opacity-85">
+                <li className="flex gap-3"><MapPin size={16} className="shrink-0" />207 Ugwunobamkpa Road, by Savoir Junction,<br className="hidden sm:block" /> off Awka Road, Onitsha, Anambra State</li>
+                <li className="flex gap-3"><EnvelopeSimple size={16} />info@entechinnovations.com</li>
+                <li className="flex gap-3"><Phone size={16} />+234 806 983 1304</li>
               </ul>
             </div>
-            {[["Explore", ["About us", "Tech Academy", "Media & Studio"]], ["Connect", ["Co-working", "Blog & News", "Contact"]]].map(([h, ls]) => (
+            {[["Services", ["Tech Academy", "Media & Studio", "Co-working"]], ["Company", ["About us", "Blog & News", "Contact"]]].map(([h, ls]) => (
               <div key={h as string}>
-                <p className="text-[11px] font-semibold uppercase tracking-wider text-primary-foreground/50">{h}</p>
+                <p className="text-[11px] font-semibold uppercase tracking-wider opacity-50">{h}</p>
                 <ul className="mt-4">
-                  {(ls as string[]).map((l) => <li key={l}><a href="#" className="flex items-center justify-between border-b border-primary-foreground/10 py-2.5">{l}<ArrowUpRight size={12} /></a></li>)}
+                  {(ls as string[]).map((l) => (
+                    <li key={l}><a href="#" className="flex items-center justify-between border-b border-primary-foreground/15 py-2.5 text-xs">{l}<ArrowUpRight size={12} /></a></li>
+                  ))}
                 </ul>
               </div>
             ))}
           </div>
-          <p className="mt-10 select-none font-display text-[22vw] font-semibold leading-[0.8] text-primary-foreground/15 md:text-[15rem]">entech</p>
-          <div className="flex flex-col justify-between gap-2 border-t border-primary-foreground/10 py-5 text-[11px] text-primary-foreground/50 sm:flex-row">
-            <span>© {new Date().getFullYear()} ENTECH Innovations Limited</span><span>Onitsha, Nigeria</span>
+          <p className="mt-14 select-none text-center font-display text-[24vw] font-semibold leading-[0.75] tracking-tighter opacity-15 lg:text-[17rem]">entech</p>
+          <div className="flex flex-col items-center justify-between gap-4 border-t border-primary-foreground/15 py-5 text-[11px] opacity-70 sm:flex-row">
+            <span>© {new Date().getFullYear()} Entech Innovations Limited</span>
+            <div className="flex gap-2">
+              {[InstagramLogo, LinkedinLogo, XLogo, YoutubeLogo].map((I, i) => (
+                <a key={i} href="#" aria-label="Social" className="grid h-8 w-8 place-items-center rounded-full bg-primary-foreground/10"><I size={14} /></a>
+              ))}
+            </div>
           </div>
         </div>
       </footer>
     </div>
-  );
-}
-
-function Label({ children, light }: { children: React.ReactNode; light?: boolean }) {
-  return (
-    <span className={`flex items-center gap-2 text-[11px] font-semibold uppercase tracking-wider ${light ? "text-primary-foreground/60" : "text-muted-foreground"}`}>
-      <span className="h-1.5 w-1.5 rounded-full bg-accent" />{children}
-    </span>
   );
 }
