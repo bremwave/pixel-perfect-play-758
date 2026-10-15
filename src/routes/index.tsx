@@ -123,7 +123,7 @@ function Index() {
         <p className="mb-5 text-center text-[11px] uppercase tracking-wider text-muted-foreground">Tools you'll work with</p>
         <div className="marquee flex w-max gap-14">
           {[...tools, ...tools].map((d, i) => (
-            <img key={i} src={`https://cdn.brandfetch.io/${d}/w/200/h/60?c=1idrNwKbJHYo1eDUi2C`} alt={d} loading="lazy" className="h-6 w-auto opacity-60 grayscale" onError={(e) => (e.currentTarget.style.display = "none")} />
+            <img key={i} src={`https://cdn.brandfetch.io/${d}/w/200/h/60`} alt={d} loading="lazy" className="h-6 w-auto opacity-60 grayscale" onError={(e) => (e.currentTarget.style.display = "none")} />
           ))}
         </div>
       </section>
