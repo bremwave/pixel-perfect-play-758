@@ -75,7 +75,7 @@ function Index() {
   }, []);
 
   const nav = [["About", "#about"], ["Services", "#services"], ["Programs", "#programs"], ["Stories", "#stories"]];
-  const r = reviews[rev];
+  const r = reviews[rev]!;
 
   return (
     <div ref={root} className="overflow-x-hidden text-[13px] sm:text-sm">
