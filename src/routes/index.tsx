@@ -75,7 +75,7 @@ function Index() {
   }, []);
 
   const nav = [["About", "#about"], ["Services", "#services"], ["Programs", "#programs"], ["Stories", "#stories"]];
-  const r = reviews[rev];
+  const r = reviews[rev]!;
 
   return (
     <div ref={root} className="overflow-x-hidden text-[13px] sm:text-sm">
@@ -160,11 +160,13 @@ function Index() {
           <div className="pill grid h-28 place-items-center rounded-full bg-muted font-display text-2xl font-medium sm:h-36 sm:text-4xl">Learn</div>
           <div className="pill relative grid h-28 place-items-center overflow-hidden rounded-full sm:h-36">
             <img src={IMG} alt="" className="absolute inset-0 h-full w-full object-cover" />
+            <div className="absolute inset-0 bg-ink/45" />
             <span className="relative font-display text-2xl font-medium text-primary-foreground sm:text-4xl">Create</span>
           </div>
           <div className="pill grid h-28 place-items-center rounded-full bg-primary text-primary-foreground sm:h-36"><ArrowRight size={44} weight="light" /></div>
           <div className="pill relative grid h-28 place-items-center overflow-hidden rounded-full sm:h-36">
             <img src={IMG} alt="" className="absolute inset-0 h-full w-full object-cover" />
+            <div className="absolute inset-0 bg-ink/45" />
             <span className="relative font-display text-2xl font-medium text-primary-foreground sm:text-4xl">Elevate</span>
           </div>
         </section>
