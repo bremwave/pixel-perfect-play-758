@@ -249,7 +249,7 @@ function Index() {
           <div className="relative [mask-image:linear-gradient(90deg,transparent,black_15%,black_85%,transparent)]">
             <div className="marquee flex w-max items-center gap-16">
               {[...tools, ...tools].map((d, i) => (
-                <img key={i} src={`https://cdn.brandfetch.io/${d}/w/240/h/80/logo`} alt={d} loading="lazy" className="h-6 w-auto opacity-50 grayscale"
+                <img key={i} src={`https://cdn.brandfetch.io/${d}/w/240/h/80/logo`} alt="" loading="lazy" className="h-6 w-auto opacity-50 grayscale"
                   onError={(e) => { e.currentTarget.style.display = "none"; }} />
               ))}
             </div>
@@ -400,7 +400,7 @@ function Index() {
               </ul>
             </div>
           </div>
-          <p className="wordmark select-none text-center font-display text-[25vw] font-semibold leading-[0.72] tracking-tighter text-primary lg:text-[18rem]">entech</p>
+          <p className="wordmark select-none text-center font-display text-[25vw] font-semibold leading-[0.8] tracking-tighter text-primary pb-[3vw] lg:pb-8 lg:text-[18rem]">entech</p>
           <div className="flex flex-col items-center justify-between gap-2 border-t border-primary-foreground/10 py-5 text-[11px] text-primary-foreground/45 sm:flex-row">
             <span>© {new Date().getFullYear()} Entech Innovations Limited</span>
             <span>Made in Onitsha, Nigeria</span>
