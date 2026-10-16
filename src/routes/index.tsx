@@ -5,6 +5,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import {
   ArrowUpRight, ArrowRight, ArrowLeft, Asterisk, List, X, MapPin, EnvelopeSimple, Phone,
   InstagramLogo, LinkedinLogo, XLogo, YoutubeLogo, Target, Buildings, ArrowsClockwise, ChalkboardTeacher,
+  Plus, CaretDown, ChatCircleDots, ArrowUp,
 } from "@phosphor-icons/react";
 
 const IMG = "https://placehold.net/default.png";
@@ -50,6 +51,21 @@ const reviews = [
   { q: "The studio team gave us photos and videos that look world class. People finally notice our brand.", n: "Emeka Okafor", r: "Business Owner" },
 ];
 
+const team = [
+  { n: "Team member", r: "Founder & CEO" },
+  { n: "Team member", r: "Head of Academy" },
+  { n: "Team member", r: "Creative Director" },
+  { n: "Team member", r: "Hub Manager" },
+];
+
+const faqs = [
+  { q: "Do I need experience before joining a course?", a: "Not at all. Most classes start from the basics and move at a pace that works for beginners." },
+  { q: "Can I book the studio or boardroom by the hour?", a: "Yes. Call or email us with your date and we'll find a slot that suits you." },
+  { q: "Do you offer daily co-working passes?", a: "We have flexible plans. Drop by for a tour and we'll find one that fits how you work." },
+  { q: "Can you build a website for my business?", a: "Definitely. We design and build websites, online stores and automations for businesses of every size." },
+  { q: "Where exactly are you located?", a: "207 Ugwunobamkpa Road, by Savoir Junction, off Awka Road, Onitsha, Anambra State." },
+];
+
 const tools = ["figma.com", "github.com", "google.com", "openai.com", "adobe.com", "canva.com", "notion.so", "shopify.com"];
 
 function Index() {
@@ -57,6 +73,14 @@ function Index() {
   const [menu, setMenu] = useState(false);
   const [rev, setRev] = useState(0);
   const [hover, setHover] = useState<number | null>(null);
+  const [pil, setPil] = useState(0);
+  const [faq, setFaq] = useState<number | null>(0);
+  const [top, setTop] = useState(false);
+  useEffect(() => {
+    const f = () => setTop(window.scrollY > 600);
+    window.addEventListener("scroll", f, { passive: true });
+    return () => window.removeEventListener("scroll", f);
+  }, []);
 
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
@@ -69,12 +93,14 @@ function Index() {
       gsap.from(".pill", { scale: 0.85, opacity: 0, stagger: 0.1, duration: 0.7, ease: "back.out(1.6)", scrollTrigger: { trigger: ".pills", start: "top 85%" } });
       gsap.to(".orb", { y: -10, yoyo: true, repeat: -1, duration: 2.4, stagger: 0.4, ease: "sine.inOut" });
       gsap.to(".marquee", { xPercent: -50, repeat: -1, duration: 30, ease: "none" });
+      gsap.to(".hero-par", { yPercent: -10, ease: "none", scrollTrigger: { trigger: ".hero-par", start: "top top", end: "bottom top", scrub: true } });
+      gsap.from(".wordmark", { yPercent: 40, opacity: 0, ease: "power3.out", scrollTrigger: { trigger: ".wordmark", start: "top 95%", end: "top 60%", scrub: true } });
       gsap.to(".spin", { rotate: 360, repeat: -1, duration: 12, ease: "none" });
     }, root);
     return () => ctx.revert();
   }, []);
 
-  const nav = [["About", "#about"], ["Services", "#services"], ["Programs", "#programs"], ["Stories", "#stories"]];
+  const nav = [["About", "#about"], ["Services", "#services"], ["Team", "#team"], ["FAQ", "#faq"]];
   const r = reviews[rev]!;
 
   return (
@@ -124,21 +150,9 @@ function Index() {
             </div>
           </div>
 
-          <div className="h-card relative min-h-[420px] overflow-hidden rounded-[2rem] bg-muted sm:min-h-[520px]">
-            <img src={IMG} alt="ENTECH hub" className="absolute inset-0 h-full w-full object-cover" />
-            <div className="absolute left-4 top-4 flex items-center gap-3 rounded-2xl bg-background p-2 pr-4 shadow-sm">
-              <img src={IMG} alt="" className="h-12 w-12 rounded-xl object-cover" />
-              <span className="text-xs font-medium leading-tight">Onitsha's<br />tech hub</span>
-            </div>
-            <span className="absolute right-4 top-4 grid h-9 w-9 place-items-center rounded-full bg-accent text-accent-foreground"><ArrowUpRight size={16} /></span>
-            <div className="absolute left-1/2 top-[38%] hidden -translate-x-1/2 flex-col gap-2 sm:flex">
-              {["Tech Academy", "Media Studio", "Co-working"].map((t, i) => (
-                <span key={t} style={{ marginLeft: i * 40 }} className="flex w-max items-center gap-1.5 rounded-full border border-background/60 bg-ink/30 px-3 py-1 text-[11px] text-primary-foreground backdrop-blur">
-                  <span className="h-1.5 w-1.5 rounded-full bg-accent" />{t}
-                </span>
-              ))}
-            </div>
-            <p className="absolute bottom-4 right-4 max-w-[200px] rounded-2xl bg-background p-3 text-[11px] leading-snug">Practical skills, workspace and strategy for a fast moving economy.</p>
+          <div className="h-card flash group relative min-h-[420px] overflow-hidden rounded-[2rem] bg-muted sm:min-h-[520px]">
+            <img src={IMG} alt="ENTECH hub" className="hero-par absolute inset-0 h-[115%] w-full object-cover transition-transform duration-[1.2s] ease-out group-hover:scale-105" />
+            <span className="absolute right-4 top-4 grid h-10 w-10 place-items-center rounded-full bg-accent text-accent-foreground transition-transform duration-500 group-hover:rotate-45"><ArrowUpRight size={16} /></span>
           </div>
         </section>
 
@@ -202,22 +216,30 @@ function Index() {
             <h2 className="font-display text-3xl font-medium sm:text-4xl">Our pillars</h2>
             <p className="max-w-[220px] text-xs text-muted-foreground">Four connected services that help you grow faster.</p>
           </div>
-          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-[1.5fr_1fr_1fr_1fr]">
-            {pillars.map((p, i) => (
-              <div key={p.title} className="rv group relative h-[380px] overflow-hidden rounded-[1.75rem] bg-muted sm:h-[440px]">
-                <img src={IMG} alt={p.title} loading="lazy" className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" />
-                <div className="absolute inset-0 bg-gradient-to-t from-ink/90 via-ink/20 to-transparent" />
-                <div className="absolute left-4 top-4 flex flex-wrap gap-1">
-                  {p.tags.map((t) => <span key={t} className="rounded-full border border-primary-foreground/40 px-2.5 py-0.5 text-[10px] text-primary-foreground">{t}</span>)}
+          <div className="flex flex-col gap-3 lg:h-[460px] lg:flex-row" onMouseLeave={() => setPil(0)}>
+            {pillars.map((p, i) => {
+              const on = pil === i;
+              return (
+                <div key={p.title} onMouseEnter={() => setPil(i)} onClick={() => setPil(i)}
+                  style={{ flexGrow: on ? 3.2 : 1 }}
+                  className="rv flash group relative h-[340px] min-w-0 basis-0 cursor-pointer overflow-hidden rounded-[1.75rem] bg-muted transition-[flex-grow] duration-700 ease-[cubic-bezier(.7,0,.2,1)] lg:h-auto">
+                  <img src={IMG} alt={p.title} loading="lazy" className={`absolute inset-0 h-full w-full object-cover transition-transform duration-1000 ${on ? "scale-105" : ""}`} />
+                  <div className="absolute inset-0 bg-gradient-to-t from-ink/90 via-ink/25 to-transparent" />
+                  <span className="absolute left-5 top-5 font-display text-xs text-primary-foreground/70">0{i + 1}</span>
+                  <span className={`absolute right-4 top-4 grid h-9 w-9 place-items-center rounded-full transition-all duration-500 ${on ? "rotate-45 bg-accent text-accent-foreground" : "bg-background text-foreground"}`}><ArrowUpRight size={14} /></span>
+                  <div className="absolute inset-x-5 bottom-5 text-primary-foreground">
+                    <h3 className={`font-display font-medium leading-none transition-all duration-500 ${on ? "text-3xl" : "text-xl lg:[writing-mode:vertical-rl] lg:rotate-180"}`}>{p.title}</h3>
+                    <div className={`grid transition-all duration-700 ${on ? "mt-3 grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0 lg:grid-rows-[0fr]"} max-lg:mt-3 max-lg:grid-rows-[1fr] max-lg:opacity-100`}>
+                      <div className="overflow-hidden">
+                        <div className="flex flex-wrap gap-1">{p.tags.map((t) => <span key={t} className="rounded-full border border-primary-foreground/40 px-2.5 py-0.5 text-[10px]">{t}</span>)}</div>
+                        <p className="mt-3 max-w-sm text-xs leading-relaxed opacity-80">{p.text}</p>
+                        <a href="#contact" className="mt-4 inline-flex items-center gap-2 rounded-full bg-background px-4 py-2 text-[11px] font-semibold text-foreground">Learn more <ArrowRight size={12} /></a>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <span className={`absolute right-4 top-4 grid h-9 w-9 place-items-center rounded-full ${i === 0 ? "bg-accent text-accent-foreground" : "bg-background text-foreground"}`}><ArrowUpRight size={14} /></span>
-                <div className="absolute inset-x-4 bottom-4 text-primary-foreground">
-                  <h3 className="font-display text-2xl font-medium leading-none">{p.title}</h3>
-                  <p className="mt-2 text-[11px] leading-snug opacity-75">{p.text}</p>
-                  <a href="#contact" className="mt-4 flex items-center justify-between rounded-full bg-background px-4 py-2.5 text-[11px] font-semibold uppercase tracking-wide text-foreground">Explore <ArrowRight size={12} /></a>
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </section>
 
@@ -227,7 +249,7 @@ function Index() {
           <div className="relative [mask-image:linear-gradient(90deg,transparent,black_15%,black_85%,transparent)]">
             <div className="marquee flex w-max items-center gap-16">
               {[...tools, ...tools].map((d, i) => (
-                <img key={i} src={`https://cdn.brandfetch.io/${d}/w/240/h/80/logo`} alt={d} loading="lazy" className="h-6 w-auto opacity-50 grayscale"
+                <img key={i} src={`https://cdn.brandfetch.io/${d}/w/240/h/80/logo`} alt="" loading="lazy" className="h-6 w-auto opacity-50 grayscale"
                   onError={(e) => { e.currentTarget.style.display = "none"; }} />
               ))}
             </div>
@@ -275,8 +297,55 @@ function Index() {
           </div>
         </section>
 
+        {/* TEAM */}
+        <section id="team" className="py-24">
+          <div className="rv flex flex-col justify-between gap-3 sm:flex-row sm:items-end">
+            <h2 className="font-display text-3xl font-medium sm:text-4xl">Meet the team</h2>
+            <p className="max-w-[220px] text-xs text-muted-foreground">The people who make the hub tick, every single day.</p>
+          </div>
+          <div className="mt-8 grid grid-cols-2 gap-3 lg:grid-cols-4">
+            {team.map((m) => (
+              <div key={m.n} className="rv flash group relative aspect-[3/4] overflow-hidden rounded-[1.75rem] bg-muted">
+                <img src={IMG} alt={m.n} loading="lazy" className="absolute inset-0 h-full w-full object-cover transition-transform duration-1000 group-hover:scale-110" />
+                <span className="absolute left-3 top-3 rounded-full bg-background/85 px-3 py-1 text-[11px] font-medium backdrop-blur">{m.n}</span>
+                <span className="absolute bottom-3 right-3 rounded-full bg-ink/60 px-3 py-1 text-[11px] text-primary-foreground backdrop-blur transition-all duration-500 group-hover:bg-primary">{m.r}</span>
+                <span className="absolute right-3 top-3 grid h-8 w-8 place-items-center rounded-full bg-background/85 transition-transform duration-500 group-hover:rotate-90"><Plus size={12} /></span>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* FAQ */}
+        <section id="faq" className="grid gap-10 pb-24 md:grid-cols-2">
+          <div className="rv flex flex-col justify-between gap-8">
+            <h2 className="font-display text-3xl font-medium sm:text-4xl">Frequently<br />asked questions</h2>
+            <div className="max-w-[260px] rounded-[1.5rem] border border-border bg-card p-5">
+              <span className="grid h-9 w-9 place-items-center rounded-full bg-secondary text-primary"><ChatCircleDots size={18} /></span>
+              <p className="mt-4 font-medium">Still have questions?</p>
+              <p className="mt-1 text-xs text-muted-foreground">Courses, studio bookings, desks or anything in between. We're happy to help.</p>
+              <a href="#contact" className="mt-5 flex items-center justify-between text-xs font-semibold">Contact us <span className="grid h-8 w-8 place-items-center rounded-full bg-secondary"><ArrowUpRight size={12} /></span></a>
+            </div>
+          </div>
+          <div className="rv">
+            {faqs.map((f, i) => {
+              const on = faq === i;
+              return (
+                <div key={f.q} className="border-b border-border">
+                  <button onClick={() => setFaq(on ? null : i)} className="flex w-full items-center justify-between gap-4 py-5 text-left">
+                    <span><span className="block text-[10px] text-muted-foreground">0{i + 1}</span><span className="font-medium">{f.q}</span></span>
+                    <span className={`grid h-8 w-8 shrink-0 place-items-center rounded-full transition-all duration-500 ${on ? "rotate-180 bg-primary text-primary-foreground" : "bg-muted"}`}><CaretDown size={12} /></span>
+                  </button>
+                  <div className={`grid transition-all duration-500 ease-out ${on ? "grid-rows-[1fr] pb-5 opacity-100" : "grid-rows-[0fr] opacity-0"}`}>
+                    <p className="overflow-hidden pr-12 text-muted-foreground">{f.a}</p>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </section>
+
         {/* CTA */}
-        <section id="contact" className="py-24">
+        <section id="contact" className="pb-24">
           <div className="rv grid gap-8 border-b border-border pb-16 md:grid-cols-2 md:items-end">
             <span className="w-max rounded-full border border-border px-3 py-1 text-[11px]">Let's talk</span>
             <div>
@@ -291,40 +360,58 @@ function Index() {
       </div>
 
       {/* FOOTER */}
-      <footer className="bg-deep text-primary-foreground">
-        <div className="mx-auto max-w-[1240px] px-5 pt-16">
-          <div className="grid gap-12 md:grid-cols-[1.3fr_1fr_1fr]">
+      <footer className="relative mt-4 overflow-hidden rounded-t-[2.5rem] bg-ink text-primary-foreground sm:rounded-t-[4rem]">
+        <div className="mx-auto max-w-[1240px] px-5 pt-16 sm:pt-20">
+          <div className="grid gap-10 border-b border-primary-foreground/10 pb-14 lg:grid-cols-[1.2fr_1fr] lg:items-end">
+            <h2 className="rv font-display text-3xl font-medium leading-tight sm:text-5xl">Ready to build<br /><span className="text-primary-foreground/40">your next big thing?</span></h2>
+            <form onSubmit={(e) => e.preventDefault()} className="rv flex w-full items-center gap-2 rounded-full border border-primary-foreground/15 p-1.5 focus-within:border-accent">
+              <input type="email" required placeholder="Your email for updates" className="min-w-0 flex-1 bg-transparent px-4 text-xs outline-none placeholder:text-primary-foreground/40" />
+              <button className="inline-flex shrink-0 items-center gap-2 rounded-full bg-primary px-4 py-2.5 text-xs font-medium transition-colors hover:bg-accent hover:text-accent-foreground">Subscribe <ArrowRight size={12} /></button>
+            </form>
+          </div>
+          <div className="grid gap-10 py-14 sm:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1fr]">
             <div>
-              <p className="font-display text-xl font-semibold">Entech Innovations</p>
-              <p className="mt-1 text-xs opacity-60">Innovate. Create. Elevate.</p>
-              <ul className="mt-8 space-y-3 text-xs opacity-85">
-                <li className="flex gap-3"><MapPin size={16} className="shrink-0" />207 Ugwunobamkpa Road, by Savoir Junction,<br className="hidden sm:block" /> off Awka Road, Onitsha, Anambra State</li>
-                <li className="flex gap-3"><EnvelopeSimple size={16} />info@entechinnovations.com</li>
-                <li className="flex gap-3"><Phone size={16} />+234 806 983 1304</li>
-              </ul>
+              <a href="#" className="flex items-center gap-2 font-display text-lg font-semibold">
+                <span className="grid h-7 w-7 place-items-center rounded-lg bg-primary"><Asterisk size={15} weight="bold" /></span>Entech
+              </a>
+              <p className="mt-4 max-w-[240px] text-xs leading-relaxed text-primary-foreground/55">Premier ICT, media and business solutions hub. Innovate. Create. Elevate.</p>
+              <div className="mt-6 flex gap-2">
+                {[InstagramLogo, LinkedinLogo, XLogo, YoutubeLogo].map((I, k) => (
+                  <a key={k} href="#" aria-label="Social" className="grid h-9 w-9 place-items-center rounded-full border border-primary-foreground/15 transition-all duration-300 hover:-translate-y-1 hover:border-primary hover:bg-primary"><I size={14} /></a>
+                ))}
+              </div>
             </div>
-            {[["Services", ["Tech Academy", "Media & Studio", "Co-working"]], ["Company", ["About us", "Blog & News", "Contact"]]].map(([h, ls]) => (
+            {[["Services", ["Tech Academy", "Media & Studio", "Co-working", "Digital Solutions"]], ["Company", ["About us", "Our team", "Blog & News", "FAQ"]]].map(([h, ls]) => (
               <div key={h as string}>
-                <p className="text-[11px] font-semibold uppercase tracking-wider opacity-50">{h}</p>
-                <ul className="mt-4">
+                <p className="text-[11px] uppercase tracking-wider text-primary-foreground/40">{h}</p>
+                <ul className="mt-5 space-y-3 text-xs">
                   {(ls as string[]).map((l) => (
-                    <li key={l}><a href="#" className="flex items-center justify-between border-b border-primary-foreground/15 py-2.5 text-xs">{l}<ArrowUpRight size={12} /></a></li>
+                    <li key={l}><a href="#" className="group inline-flex items-center gap-1 text-primary-foreground/80 transition-colors hover:text-primary-foreground">{l}<ArrowUpRight size={10} className="opacity-0 transition-all group-hover:translate-x-0.5 group-hover:opacity-100" /></a></li>
                   ))}
                 </ul>
               </div>
             ))}
-          </div>
-          <p className="mt-14 select-none text-center font-display text-[24vw] font-semibold leading-[0.75] tracking-tighter opacity-15 lg:text-[17rem]">entech</p>
-          <div className="flex flex-col items-center justify-between gap-4 border-t border-primary-foreground/15 py-5 text-[11px] opacity-70 sm:flex-row">
-            <span>© {new Date().getFullYear()} Entech Innovations Limited</span>
-            <div className="flex gap-2">
-              {[InstagramLogo, LinkedinLogo, XLogo, YoutubeLogo].map((I, i) => (
-                <a key={i} href="#" aria-label="Social" className="grid h-8 w-8 place-items-center rounded-full bg-primary-foreground/10"><I size={14} /></a>
-              ))}
+            <div>
+              <p className="text-[11px] uppercase tracking-wider text-primary-foreground/40">Visit us</p>
+              <ul className="mt-5 space-y-3 text-xs text-primary-foreground/80">
+                <li className="flex gap-2"><MapPin size={14} className="mt-0.5 shrink-0" />207 Ugwunobamkpa Road, by Savoir Junction, off Awka Road, Onitsha</li>
+                <li><a href="mailto:info@entechinnovations.com" className="flex gap-2 hover:text-primary-foreground"><EnvelopeSimple size={14} className="shrink-0" />info@entechinnovations.com</a></li>
+                <li><a href="tel:+2348069831304" className="flex gap-2 hover:text-primary-foreground"><Phone size={14} className="shrink-0" />+234 806 983 1304</a></li>
+              </ul>
             </div>
+          </div>
+          <p className="wordmark select-none text-center font-display text-[25vw] font-semibold leading-[0.8] tracking-tighter text-primary pb-[3vw] lg:pb-8 lg:text-[18rem]">entech</p>
+          <div className="flex flex-col items-center justify-between gap-2 border-t border-primary-foreground/10 py-5 text-[11px] text-primary-foreground/45 sm:flex-row">
+            <span>© {new Date().getFullYear()} Entech Innovations Limited</span>
+            <span>Made in Onitsha, Nigeria</span>
           </div>
         </div>
       </footer>
+
+      <button aria-label="Scroll to top" onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+        className={`fixed bottom-5 right-5 z-50 grid h-11 w-11 place-items-center rounded-full bg-primary text-primary-foreground shadow-lg transition-all duration-500 hover:-translate-y-1 ${top ? "translate-y-0 opacity-100" : "pointer-events-none translate-y-4 opacity-0"}`}>
+        <ArrowUp size={16} />
+      </button>
     </div>
   );
 }

@@ -119,3 +119,13 @@
   html { scroll-behavior: smooth; }
 }
 @utility bg-deep { background: var(--gradient-deep); }
+
+@utility flash {
+  isolation: isolate;
+  &::after {
+    content: ""; position: absolute; inset: 0; z-index: 5; pointer-events: none;
+    background: linear-gradient(115deg, transparent 35%, color-mix(in oklab, var(--primary-foreground) 55%, transparent) 50%, transparent 65%);
+    transform: translateX(-120%);
+  }
+  &:hover::after { transform: translateX(120%); transition: transform 0.9s cubic-bezier(.4,0,.2,1); }
+}
